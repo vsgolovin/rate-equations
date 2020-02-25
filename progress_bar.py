@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct  9 17:09:42 2019
 
-@author: vyacheslav
+@author: vs_golovin
 """
 
 # Print iterations progress

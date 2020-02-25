@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec 26 12:58:57 2019
@@ -24,13 +23,13 @@ def solve_RE(ld, I_fun, t_fin=10e-9, timesteps=3000, method='Radau', rtol=5e-5):
         Pump current (A) vs time (s). Must have an `amplitude` argument.
     t_fin : number, optional
         Endpoint of integration interval (s). The default is 10e-9.
-    timesteps : TYPE, optional
+    timesteps : integer, optional
         Number of grid points for time. The default is 3000.
     method : string or `scipy.integrate.OdeSolver`, optional
         Integration method to be used by `scipy.integrate.solve_ivp`.
-        The default is 'DOP853'.
+        The default is 'Radau'.
     rtol : number
-        Relative tolerance. The default is 1e-4.
+        Relative tolerance. The default is 5e-5.
 
     Returns
     -------

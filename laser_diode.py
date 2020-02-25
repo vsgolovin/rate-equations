@@ -23,7 +23,7 @@ class Laser_Diode():
     R1 : number
         Back mirror reflectivity (0<R1<1).
     R2 : number
-        Front mirror reflectivity (0<R1<1).
+        Front mirror reflectivity (0<R2<1).
     beta_sp : number
         Spontaneous emission factor (unitless).
     """
@@ -138,4 +138,3 @@ class Laser_Diode():
         E_ph = const.h*const.c/self.lam
         v_g = const.c/self.index
         return S*self.V_wg*self.alpha_m*v_g*E_ph
-        

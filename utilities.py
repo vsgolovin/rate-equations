@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec 18 18:17:31 2019
@@ -78,9 +77,9 @@ def find_d2y_zeros(x, y, y_min=0.05):
     return roots_x, roots_y
 
 
-def find_fwhm(x, y):
+def find_FHWM(x, y):
     """
-    Find FWHM of the waveform.
+    Find FWHM (full width at half maximum) of the waveform.
     """
     xmax = x[np.argmax(y)]
     yn = y/np.max(y)
@@ -92,6 +91,9 @@ def find_fwhm(x, y):
 
 
 def tanh_pulse(t, shift, rise_time, fall_time, width, amplitude):
+    """
+    Generate a pulse using `tanh` function.
+    """
     i1 = np.tanh((t-shift)/rise_time)
     i2 = np.tanh((t-shift-width)/fall_time)
     return amplitude*(i1-i2)
