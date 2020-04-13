@@ -37,7 +37,7 @@ def rect_pulse(t, t_max, length, t_rise, t_fall, amplitude, constant):
     return amplitude*(f1-f2)+constant
 
 
-def find_d2y_zeros(x, y, y_min=0.05):
+def find_d2ydx2_zeros(x, y, y_min=0.05):
     """
     Find zeros of the second derivative (d2y/dx2). Only consider parts of the
     curve where `y >= y_min`.
