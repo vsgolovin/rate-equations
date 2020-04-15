@@ -9,7 +9,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 
-def rect_pulse(t, t_max, length, t_rise, t_fall, amplitude, constant):
+def rect_pulse(t, t_max, length, t_rise, t_fall, amplitude, constant=0):
     """
     Generate a rectangular pulse.
     Uses Fermi function for smoothing.
@@ -77,7 +77,7 @@ def find_d2ydx2_zeros(x, y, y_min=0.05):
     return roots_x, roots_y
 
 
-def find_FHWM(x, y):
+def find_FWHM(x, y):
     """
     Find FWHM (full width at half maximum) of the waveform.
     """
