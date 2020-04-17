@@ -33,14 +33,18 @@ def sp_init(ld, I_fun, t_fin, timesteps, I_init=5.0,
 
     # initializing currents
     I_th = ld.estimate_Ith()
+    if I_max and I_th > I_max:
+        sol, _ = sol_power(I_max)
+        return -1, sol
     I1 = I_th
     I2 = I_init*I_th
     dI = dI*I_th
 
     # minimum current
-    _, P1 = sol_power(I1)
+    sol1, P1 = sol_power(I1)
     if np.max(P1)>P_min:
-        raise Exception("Function sp_init: P_min = "+str(np.max(P1)))
+        print("Function sp_init: P_min = %fW" % np.max(P1))
+        return -1, sol1
 
     # maximum current
     sol2, P2 = sol_power(I2)
