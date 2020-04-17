@@ -49,7 +49,8 @@ def find_d2ydx2_zeros(x, y, y_min=0.05):
     y : `numpy.ndarray`
         y values.
     y_min : float [0, 1], optional
-        The min. The default is 0.05.
+        Minimum value of y (in relative units) to be considered.
+        The default is 0.05.
 
     Returns
     -------
@@ -88,6 +89,74 @@ def find_FWHM(x, y):
     x1 = roots[roots<xmax][-1]
     x2 = roots[roots>xmax][0]
     return x2-x1
+
+
+def find_boundaries(x, y, level=0.9, y_min=1e-6):
+    """
+    Find boundaries of the shortest interval whose integral is at least
+    `level` * total integral of y(x).
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        x values
+    y : numpy.ndarray
+        y values (should be non-negative)
+    level : number
+        Minimum value of the integral on the interval to be found relative to
+        the total integral (0 < level < 1).
+    y_min : number or None
+        Cutoff value of y (relative units). If it is specified only the part of
+        the waveform between first and last y values larger than `y_min` will
+        be considered.
+    """
+
+    # checking passed values
+    assert len(x) == len(y)
+    assert level>0 and level<1
+    if y_min:
+        assert y_min>0 and y_min<1
+
+    # cutting off waveform 'tails' with small y
+    if y_min:
+        yn = y / y.max()
+        ix1 = 0
+        while yn[ix1] < y_min:
+            ix1 += 1
+        ix2 = len(yn)-1
+        while yn[ix2] < y_min:
+            ix2 -= 1
+        x = x[ix1 : ix2+1]
+        y = y[ix1 : ix2+1]
+    
+    # finding length of the shortest possible interval
+    n = len(y) - 1
+    ydx = (y[1:] + y[:-1]) / 2 * (x[1:] - x[:-1])
+    integral = np.sum(ydx)
+    m = n - 1
+    k_best = 0
+    while m > 0:
+        success = False
+        for k in range(n-m):
+            ip = np.sum(ydx[k:m+k])
+            if ip >= level*integral:
+                k_best = k
+                success = True
+                break
+        if not success:
+            break
+        m -= 1
+
+    # checking (greedily) if there is an interval
+    # with a larger integral
+    while ydx[m+k_best] > ydx[k_best]:
+        k_best += 1
+
+    # boundaries
+    x1 = x[k_best]
+    x2 = x[m+k_best+1]
+
+    return x1, x2
 
 
 def tanh_pulse(t, shift, rise_time, fall_time, width, amplitude):
