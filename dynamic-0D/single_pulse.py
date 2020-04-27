@@ -9,7 +9,30 @@ Created on Fri Apr 10 18:10:29 2020
 from functools import partial
 import numpy as np
 from solver import solve_RE
-from utilities import find_d2ydx2_zeros
+from utilities import find_d2ydx2_zeros, find_boundaries
+
+
+def spb_d2ydx2(x, y, y_min):
+    """
+    Returns `True` if there are 2 zeros of the second derivative of y(x),
+    `False` otherwise.
+    """
+    rx, ry = find_d2ydx2_zeros(x, y, y_min=y_min)
+    if len(ry)==2:
+        return True
+    else:
+        return False
+
+
+def spb_pulse_width(x, y, width, level, y_min):
+    """
+    Returns `True` if pulse y(x) is shorter than `level`, `False` otherwise.
+    """
+    x1, x2 = find_boundaries(x, y, level=level, y_min=y_min)
+    if (x2-x1)<=width:
+        return True
+    else:
+        return False
 
 
 def sp_init(ld, I_fun, t_fin, timesteps, I_init=5.0,
