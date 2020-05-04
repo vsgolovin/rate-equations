@@ -105,8 +105,8 @@ def find_boundaries(x, y, level=0.9, y_min=1e-6):
     level : number
         Minimum value of the integral on the interval to be found relative to
         the total integral (0 < level < 1).
-    y_min : number or None
-        Cutoff value of y (relative units). If it is specified only the part of
+    y_min : number
+        Cutoff value of y (relative units). If it is nonzero only the part of
         the waveform between first and last y values larger than `y_min` will
         be considered.
     """
@@ -128,10 +128,10 @@ def find_boundaries(x, y, level=0.9, y_min=1e-6):
             ix2 -= 1
         x = x[ix1 : ix2+1]
         y = y[ix1 : ix2+1]
-    
+
     # finding length of the shortest possible interval
     n = len(y) - 1
-    ydx = (y[1:] + y[:-1]) / 2 * (x[1:] - x[:-1])
+    ydx = (y[1:] + y[:-1]) / 2 * (x[1:] - x[:-1])  # trapezoid formula
     integral = np.sum(ydx)
     m = n - 1
     k_best = 0
@@ -142,19 +142,19 @@ def find_boundaries(x, y, level=0.9, y_min=1e-6):
             if ip >= level*integral:
                 k_best = k
                 success = True
+                m -= 1
                 break
         if not success:
+            m += 1
             break
-        m -= 1
 
-    # checking (greedily) if there is an interval
-    # with a larger integral
-    while ydx[m+k_best] > ydx[k_best]:
+    # checking if there is an interval with a larger integral
+    while (m+k_best < n) and ydx[m+k_best] > ydx[k_best]:
         k_best += 1
 
     # boundaries
     x1 = x[k_best]
-    x2 = x[m+k_best+1]
+    x2 = x[m+k_best]
 
     return x1, x2
 
