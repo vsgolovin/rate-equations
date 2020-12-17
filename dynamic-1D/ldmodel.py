@@ -8,6 +8,10 @@ Created on Tue Dec 15 16:11:37 2020
 import numpy as np
 import constants as const
 
+necess_params = ('lambda', 'n_eff', 'd_a', 'Gamma', 'ni', 'eta_inj', 'alpha_i',
+                 'gain', 'beta_sp', 'srh_n1', 'srh_p1', 'srh_tau_n',
+                 'srh_tau_p', 'rad_B', 'aug_Cn', 'aug_Cp')
+
 class CurrentPulse:
 
     def __init__(self, J_t, z1_t, z2_t):
@@ -56,6 +60,8 @@ class LDModel:
             Second mirror reflectivity (z=L, 0<R2<1).
         epi : dict
             Epitaxial design parameters.
+        npoints : int
+            Number of uniform grid points.
 
         """
         # size and mirrors' reflectivities
@@ -65,6 +71,7 @@ class LDModel:
         self.R2 = R2
 
         # epitaxial design parameters
+        assert all([param in epi for param in necess_params])
         self.lam = epi['lambda']
         self.n_eff = epi['n_eff']
         self.d_a = epi['d_a']
@@ -88,6 +95,10 @@ class LDModel:
 
         self.J_funs = list()  # current pulses
         self.z_grid = np.linspace(0, self.L, npoints)  # grid
+
+    def get_grid(self):
+        "Returns the generated grid nodes."
+        return self.z_grid
 
     def add_current_pulse(self, pulse):
         "Add a 'CurrentPulse` object to the list of current pulses."
